@@ -32,7 +32,16 @@ class SellerController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:sellers,email',
-            'password' => 'required',
+            'password' => [
+                'required',
+               
+                Password::min(8)
+                    ->mixedCase()      // upper + lower case
+                    ->letters()        // must contain letters
+                    ->numbers()        // must contain numbers
+                    ->symbols()        // must contain symbols
+                    ->uncompromised(), // check against leaked passwords
+            ],
             'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048', // 2048 KB = 2MB
             'mobile' => 'required|digits:11|numeric|unique:customers,mobile',
             'address' => 'required'
